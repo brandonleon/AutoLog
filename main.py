@@ -5,7 +5,7 @@ defines the commands that can be run from the command line.
 from typing import Annotated
 
 import typer
-from query import query_logs, query_vehicles
+from data_reader import query_logs, query_vehicles
 from database_utilities import initialize_database
 
 # Initialize the database (Create the file and tables if they don't exist).
