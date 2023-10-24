@@ -1,3 +1,7 @@
+"""
+This module contains the functions to query the database for logs and vehicles.
+"""
+
 import sqlite3
 import typer
 from rich.console import Console
@@ -6,6 +10,13 @@ from constants import DB_FILE
 
 
 def query_logs(page: int = 1, page_size: int = 10, vehicle_id: str = None):
+    """
+    Query the logs table and display the results.
+
+    page: The page number to display.
+    page_size: The number of records to display per page.
+    vehicle_id: The vehicle ID to filter on.
+    """
     with sqlite3.connect(DB_FILE) as conn:
         cursor = conn.cursor()
 
@@ -47,6 +58,13 @@ def query_logs(page: int = 1, page_size: int = 10, vehicle_id: str = None):
 
 
 def query_vehicles(page: int = 1, page_size: int = 10, vehicle_id: str = None):
+    """
+    Query the vehicles table and display the results.
+
+    page: The page number to display.
+    page_size: The number of records to display per page.
+    vehicle_id: The vehicle ID to filter on.
+    """
     with sqlite3.connect(DB_FILE) as conn:
         cursor = conn.cursor()
 
