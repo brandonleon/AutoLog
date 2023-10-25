@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "autolog"
+name = "VehicleVitals"
 version = "0.1.0"
 description = ""
 authors = ["Brandon Leon <brandonleon@pm.me>"]
@@ -10,6 +10,7 @@ python = "^3.11"
 click = "^8.1.7"
 typer = "^0.9.0"
 icecream = "^2.1.3"
+rich = "^13.6.0"
 
 
 [build-system]
