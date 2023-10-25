@@ -1,5 +1,5 @@
 """
-This module contains the functions to query the database for logs and vehicles.
+This module contains the functions to read from the database.
 """
 
 import sqlite3

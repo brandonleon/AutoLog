@@ -8,7 +8,7 @@ from enum import Enum
 
 import typer
 from data_reader import query_logs, query_vehicles
-# from data_writer import add_record TODO: complete logic in data_writer.py
+from data_writer import add_record
 from database_utilities import initialize_database
 
 # Initialize the database (Create the file and tables if they don't exist).
@@ -73,13 +73,12 @@ def add_log_entry(
         entry_date: Annotated[str, typer.Option(help="Date of service")] = datetime.now().strftime("%m/%d/%Y"),
         entry_time: Annotated[str, typer.Option(help="Time of service")] = datetime.now().strftime("%I:%M %p"),
         location: Annotated[str, typer.Option(help="Location of service")] = "Home",
-        total_cost: Annotated[float, typer.Option(help="Total cost of service")] = '$0.0'
+        total_cost: Annotated[float, typer.Option(help="Total cost of service")] = '0.0'
 ):
     """
     Add a log entry for a vehicle.
-    TODO: complet logic in data_writer.py
     """
-    pass
+    add_record(vehicle_id, odometer, service, entry_date, entry_time, location, total_cost)
 
 
 if __name__ == "__main__":
