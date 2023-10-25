@@ -43,16 +43,16 @@ def query_logs(page: int = 1, page_size: int = 10, vehicle_id: str = None):
         if logs := cursor.fetchall():
             print(f"Page {page}:")
             console = Console()
-            table = Table(
-                "Vehicle", "EntryDate", "EntryTime", "EntryType", "Services"
-            )
+            table = Table("Vehicle", "EntryDate", "EntryTime", "EntryType", "Services")
             for log in logs:
-
-                table.add_row(f'{log[0]} {log[1]} {log[2]} {log[3]}', log[4], log[5], log[6], log[7])
-
+                table.add_row(
+                    f"{log[0]} {log[1]} {log[2]} {log[3]}",
+                    log[4],
+                    log[5],
+                    log[6],
+                    log[7],
+                )
             console.print(table)
-            # Format the log data as needed
-
         else:
             typer.echo("No logs found on this page.")
 
@@ -69,7 +69,7 @@ def query_vehicles(page: int = 1, page_size: int = 10, vehicle_id: str = None):
         cursor = conn.cursor()
 
         # Calculate the OFFSET based on the page number and page size
-        query = "SELECT id, Make, Model, Year, mileage FROM vehicles"
+        query = "SELECT id, Year, Make, Model, Year, mileage FROM vehicles"
         params = ()
         if vehicle_id:
             query += " WHERE id = ?"
@@ -80,13 +80,13 @@ def query_vehicles(page: int = 1, page_size: int = 10, vehicle_id: str = None):
 
         cursor.execute(query, params)
         if vehicles := cursor.fetchall():
-            typer.echo(f"Page {page}:")
+            print(f"Page {page}:")
+            console = Console()
+            table = Table("id", "year", "make", "Model", "trim", "mileage")
             for vehicle in vehicles:
-                # Format the vehicle data as needed
-                formatted_vehicle = (
-                    f"id: {vehicle[0]}, Make: {vehicle[1]}, Model: {vehicle[2]}, "
-                    f"Year: {vehicle[3]}, Miles: {vehicle[4]}"
-                )
-                typer.echo(formatted_vehicle)
+                v = [str(x) for x in vehicle]
+                table.add_row(*v)
+
+            console.print(table)
         else:
             typer.echo("No vehicles found on this page.")

@@ -19,11 +19,11 @@ app = typer.Typer()
 
 @app.command()
 def display_logs(
-        page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
-        page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
-        vehicle_id: Annotated[
-            str, typer.Option(help="Filter by Vehicle ID (All if blank).")
-        ] = "",
+    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
+    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
+    vehicle_id: Annotated[
+        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
+    ] = "",
 ):
     """
     View logs with optional filtering and pagination.
@@ -37,11 +37,11 @@ def display_logs(
 
 @app.command()
 def display_vehicles(
-        page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
-        page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
-        vehicle_id: Annotated[
-            str, typer.Option(help="Filter by Vehicle ID (All if blank).")
-        ] = "",
+    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
+    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
+    vehicle_id: Annotated[
+        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
+    ] = "",
 ):
     """
     View vehicles with optional filtering and pagination.
@@ -64,21 +64,26 @@ class ServiceTypes(str, Enum):
     car_detailing = "Car Detailing"
 
 
-
 @app.command()
 def add_log_entry(
-        vehicle_id: Annotated[str, typer.Option(help="Vehicle ID")],
-        odometer: Annotated[float, typer.Option(help="Odometer reading")],
-        service: Annotated[ServiceTypes, typer.Option(help="Service performed")],
-        entry_date: Annotated[str, typer.Option(help="Date of service")] = datetime.now().strftime("%m/%d/%Y"),
-        entry_time: Annotated[str, typer.Option(help="Time of service")] = datetime.now().strftime("%I:%M %p"),
-        location: Annotated[str, typer.Option(help="Location of service")] = "Home",
-        total_cost: Annotated[float, typer.Option(help="Total cost of service")] = '0.0'
+    vehicle_id: Annotated[str, typer.Option(help="Vehicle ID")],
+    odometer: Annotated[float, typer.Option(help="Odometer reading")],
+    service: Annotated[ServiceTypes, typer.Option(help="Service performed")],
+    entry_date: Annotated[
+        str, typer.Option(help="Date of service")
+    ] = datetime.now().strftime("%m/%d/%Y"),
+    entry_time: Annotated[
+        str, typer.Option(help="Time of service")
+    ] = datetime.now().strftime("%I:%M %p"),
+    location: Annotated[str, typer.Option(help="Location of service")] = "Home",
+    total_cost: Annotated[float, typer.Option(help="Total cost of service")] = "0.0",
 ):
     """
     Add a log entry for a vehicle.
     """
-    add_record(vehicle_id, odometer, service, entry_date, entry_time, location, total_cost)
+    add_record(
+        vehicle_id, odometer, service, entry_date, entry_time, location, total_cost
+    )
 
 
 if __name__ == "__main__":
