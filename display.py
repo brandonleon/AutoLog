@@ -1,12 +1,20 @@
 """
 This module contains the functions to read from the database.
 """
-
 import sqlite3
+from typing import Annotated
+
 import typer
 from rich.console import Console
 from rich.table import Table
+
 from constants import DB_FILE
+from database_utilities import initialize_database
+
+# Initialize the database (Create the file and tables if they don't exist).
+initialize_database()
+# Create the Typer app
+app = typer.Typer()
 
 
 def query_logs(page: int = 1, page_size: int = 10, vehicle_id: str = None):
@@ -90,3 +98,42 @@ def query_vehicles(page: int = 1, page_size: int = 10, vehicle_id: str = None):
             console.print(table)
         else:
             typer.echo("No vehicles found on this page.")
+
+
+@app.command()
+def logs(
+    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
+    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
+    vehicle_id: Annotated[
+        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
+    ] = "",
+):
+    """
+    View logs with optional filtering and pagination.
+
+    page: The page number to display.
+    page_size: The number of records to display per page.
+    vehicle_id: The vehicle ID to filter on.
+    """
+    query_logs(page, page_size, vehicle_id)
+
+
+@app.command()
+def vehicles(
+    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
+    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
+    vehicle_id: Annotated[
+        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
+    ] = "",
+):
+    """
+    View vehicles with optional filtering and pagination.
+
+    page: The page number to display.
+    page_size: The number of records to display per page.
+    vehicle_id: The vehicle ID to filter on.
+    """
+    query_vehicles(page, page_size, vehicle_id)
+
+if __name__ == "__main__":
+    app()

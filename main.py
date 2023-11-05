@@ -7,7 +7,7 @@ from typing import Annotated
 from enum import Enum
 
 import typer
-from data_reader import query_logs, query_vehicles
+import display
 from data_writer import add_record
 from database_utilities import initialize_database
 
@@ -15,42 +15,7 @@ from database_utilities import initialize_database
 initialize_database()
 # Create the Typer app
 app = typer.Typer()
-
-
-@app.command()
-def display_logs(
-    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
-    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
-    vehicle_id: Annotated[
-        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
-    ] = "",
-):
-    """
-    View logs with optional filtering and pagination.
-
-    page: The page number to display.
-    page_size: The number of records to display per page.
-    vehicle_id: The vehicle ID to filter on.
-    """
-    query_logs(page, page_size, vehicle_id)
-
-
-@app.command()
-def display_vehicles(
-    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
-    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
-    vehicle_id: Annotated[
-        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
-    ] = "",
-):
-    """
-    View vehicles with optional filtering and pagination.
-
-    page: The page number to display.
-    page_size: The number of records to display per page.
-    vehicle_id: The vehicle ID to filter on.
-    """
-    query_vehicles(page, page_size, vehicle_id)
+app.add_typer(display.app, name="display")
 
 
 class ServiceTypes(str, Enum):
