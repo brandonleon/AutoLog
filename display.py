@@ -45,17 +45,23 @@ def query_logs(page: int = 1, page_size: int = 10, vehicle_id: str = None):
             params = (vehicle_id,)
 
         query += " ORDER BY l.EntryDate DESC, l.EntryTime DESC LIMIT ? OFFSET ?"
-        params += (page_size, (page - 1) * page_size)
+        params += (page_size, offset)
 
         cursor.execute(query, params)
-        if logs := cursor.fetchall():
+        if log_entries := cursor.fetchall():
             print(f"Page {page}:")
             console = Console()
-            table = Table("Vehicle", "EntryDate", "EntryTime", "Odometer", "EntryType", "Services")
-            for log in logs:
+            table = Table(
+                "Vehicle", "EntryDate", "EntryTime", "Odometer", "EntryType", "Services"
+            )
+            for log in log_entries:
                 table.add_row(
                     f"{log[0]} {log[1]} {log[2]} {log[3]}",
-                    log[4], log[5], f"{float(str(log[6]).replace(',', '')):,.1f}", log[7], log[8]
+                    log[4],
+                    log[5],
+                    f"{float(str(log[6]).replace(',', '')):,.1f}",
+                    log[7],
+                    log[8],
                 )
             console.print(table)
         else:
@@ -84,11 +90,11 @@ def query_vehicles(page: int = 1, page_size: int = 10, vehicle_id: str = None):
         params += (page_size, (page - 1) * page_size)
 
         cursor.execute(query, params)
-        if vehicles := cursor.fetchall():
+        if vehicle_entries := cursor.fetchall():
             print(f"Page {page}:")
             console = Console()
             table = Table("id", "year", "make", "Model", "trim", "mileage")
-            for vehicle in vehicles:
+            for vehicle in vehicle_entries:
                 v = [str(x) for x in vehicle]
                 table.add_row(*v)
 
@@ -131,6 +137,7 @@ def vehicles(
     vehicle_id: The vehicle ID to filter on.
     """
     query_vehicles(page, page_size, vehicle_id)
+
 
 if __name__ == "__main__":
     app()

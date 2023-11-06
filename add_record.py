@@ -8,7 +8,6 @@ from typing import Annotated
 from uuid import uuid4
 
 import typer
-from icecream import ic
 
 from constants import DB_FILE
 from database_utilities import initialize_database
