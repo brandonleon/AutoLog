@@ -18,13 +18,20 @@ initialize_database()
 app = typer.Typer()
 
 
-def query_logs(page: int = 1, page_size: int = 10, vehicle_id: str = None):
+@app.command()
+def logs(
+    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
+    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
+    vehicle_id: Annotated[
+        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
+    ] = "",
+):
     """
-    Query the logs table and display the results.
+    View logs with optional filtering and pagination.
 
-    page: The page number to display.
-    page_size: The number of records to display per page.
-    vehicle_id: The vehicle ID to filter on.
+    Examples:
+        vv display logs
+        vv display logs --vehicle-id 6a9ab94e-0cea-481d-a9d4-23b3db142984
     """
     with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
@@ -69,13 +76,20 @@ def query_logs(page: int = 1, page_size: int = 10, vehicle_id: str = None):
             typer.echo("No logs found on this page.")
 
 
-def query_vehicles(page: int = 1, page_size: int = 10, vehicle_id: str = None):
+@app.command()
+def vehicles(
+    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
+    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
+    vehicle_id: Annotated[
+        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
+    ] = "",
+):
     """
-    Query the vehicles table and display the results.
+    View vehicles with optional filtering and pagination.
 
-    page: The page number to display.
-    page_size: The number of records to display per page.
-    vehicle_id: The vehicle ID to filter on.
+    Examples:
+        vv display vehicles
+        vv display vehicles --vehicle-id 6a9ab94e-0cea-481d-a9d4-23b3db142984
     """
     with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
@@ -102,42 +116,6 @@ def query_vehicles(page: int = 1, page_size: int = 10, vehicle_id: str = None):
             console.print(table)
         else:
             typer.echo("No vehicles found on this page.")
-
-
-@app.command()
-def logs(
-    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
-    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
-    vehicle_id: Annotated[
-        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
-    ] = "",
-):
-    """
-    View logs with optional filtering and pagination.
-
-    page: The page number to display.
-    page_size: The number of records to display per page.
-    vehicle_id: The vehicle ID to filter on.
-    """
-    query_logs(page, page_size, vehicle_id)
-
-
-@app.command()
-def vehicles(
-    page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
-    page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
-    vehicle_id: Annotated[
-        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
-    ] = "",
-):
-    """
-    View vehicles with optional filtering and pagination.
-
-    page: The page number to display.
-    page_size: The number of records to display per page.
-    vehicle_id: The vehicle ID to filter on.
-    """
-    query_vehicles(page, page_size, vehicle_id)
 
 
 if __name__ == "__main__":
