@@ -45,7 +45,7 @@ def logs(
         # Prepare the SQL query with parameterized query
         query = """
             SELECT v.Year, v.Make, v.Model, v.trim, l.EntryDate, l.EntryTime,
-            l.OdometerReading, l.EntryType, l.Services
+            l.OdometerReading, l.MPG, l.EntryType, l.Services
             FROM logs l
             LEFT JOIN vehicles v ON l.VehicleID = v.id
         """
@@ -63,16 +63,17 @@ def logs(
             print(f"Page {page}:")
             console = Console()
             table = Table(
-                "Vehicle", "EntryDate", "EntryTime", "Odometer", "EntryType", "Services"
+                "Vehicle", "EntryDate", "EntryTime", "Odometer", "MPG", "EntryType", "Services"
             )
             for log in log_entries:
                 table.add_row(
                     f"{log[0]} {log[1]} {log[2]} {log[3]}",
                     log[4],
                     log[5],
-                    f"{float(str(log[6]).replace(',', '')):,.1f}",
-                    log[7],
+                    f"{float(str(log[6]).replace(',', '')):,.1f}" if log[7] is not None else "N/A",
+                    f"{float(str(log[7]).replace(',', '')):,.1f}" if log[7] is not None else "N/A",
                     log[8],
+                    log[9],
                 )
             console.print(table)
         else:
