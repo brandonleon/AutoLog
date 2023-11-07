@@ -52,7 +52,7 @@ def fuel_up(
     cost_per_gallon: Annotated[float, typer.Option(help="Cost per gallon")],
     entry_date: Annotated[
         str, typer.Option(help="Date of service")
-    ] = datetime.now().strftime("%m/%d/%Y"),
+    ] = datetime.now().strftime("%Y-%m-%d"),
     entry_time: Annotated[
         str, typer.Option(help="Time of service")
     ] = datetime.now().strftime("%I:%M %p"),
@@ -90,6 +90,9 @@ def fuel_up(
                 f"${cost_per_gallon * gallons:.2f}",
             ),
         ),
+
+        query = "UPDATE vehicles SET mileage = ? WHERE id = ?"
+        cursor.execute(query, (odometer, vehicle_id))
         conn.commit()
         typer.echo(f"Added log entry for {vehicle_id}.")
 

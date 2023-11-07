@@ -117,7 +117,14 @@ def vehicles(
             table = Table("id", "year", "make", "Model", "trim", "mileage")
             for vehicle in vehicle_entries:
                 v = [str(x) for x in vehicle]
-                table.add_row(*v)
+                table.add_row(
+                    v[0],
+                    v[1],
+                    v[2],
+                    v[3],
+                    v[4],
+                    f"{float(str(v[5]).replace(',', '')):,.1f}",
+                )
 
             console.print(table)
         else:

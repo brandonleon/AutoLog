@@ -30,7 +30,7 @@ VehicleVitals provides a feature-rich command-line interface (CLI) with the foll
 ```vv add vehicle --make "Toyota" --model "Camry" --year 2020 --mileage 12345```
 
 ### Add a fuel entry
-```vv add fuel-up --vehicle "Toyota Camry 2020" --odometer 50000 --fuel-type "Regular" --gallons 10.5 --cost 30.00```
+```vv add fuel-up --vehicle "6ce14368a66d" --odometer 50000 --fuel-type "Regular" --gallons 10.5 --cost 30.00```
 
 # Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
