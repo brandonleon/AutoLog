@@ -10,6 +10,7 @@ from uuid import uuid4
 import typer
 
 from .database_utilities import initialize_database
+from .database_utilities import get_db_location
 
 # Initialize the database (Create the file and tables if they don't exist).
 initialize_database()
@@ -79,7 +80,7 @@ def add_service(
         )
     """
 
-    with sqlite3.connect(DB_FILE) as conn:
+    with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
         query = """
             INSERT INTO logs (
@@ -143,7 +144,7 @@ def add_fuel_up(
         )
     """
 
-    with sqlite3.connect(DB_FILE) as conn:
+    with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
         query = """
             INSERT INTO logs (
@@ -227,6 +228,49 @@ def service(
         service_type,
         cost,
     )
+
+
+def add_vehicle(year, make, model, trim, engine, color):
+    pass
+
+
+@app.command()
+def vehicle(
+    year: Annotated[int, typer.Option(help="Year of vehicle")],
+    make: Annotated[str, typer.Option(help="Make of vehicle")],
+    model: Annotated[str, typer.Option(help="Model of vehicle")],
+    milage: Annotated[float, typer.Option(help="Odometer reading")],
+    trim: Annotated[str, typer.Option(help="Trim level vehicle")] = None,
+    engine: Annotated[str, typer.Option(help="Engine of vehicle")] = None,
+    color: Annotated[str, typer.Option(help="Color of vehicle")] = None,
+):
+    """
+    Add a vehicle to the database.
+    """
+    with sqlite3.connect(get_db_location()) as conn:
+        cursor = conn.cursor()
+        query = """
+            INSERT INTO vehicles (
+                id, Year, Make, Model, mileage, trim, Engine, Color
+            ) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """
+
+        cursor.execute(
+            query,
+            (
+                str(uuid4()),
+                year,
+                make,
+                model,
+                milage,
+                trim,
+                engine,
+                color,
+            ),
+        ),
+        conn.commit()
+        typer.echo(f"Added vehicle {year} {make} {model}, to the database.")
 
 
 if __name__ == "__main__":
