@@ -3,7 +3,7 @@ This module contains function to initialize the database and create the tables.
 """
 
 import sqlite3
-from constants import DB_FILE
+from .constants import DB_FILE
 
 
 def initialize_database():

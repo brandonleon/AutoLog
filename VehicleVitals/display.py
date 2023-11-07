@@ -8,8 +8,8 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from constants import DB_FILE
-from database_utilities import initialize_database
+from .constants import DB_FILE
+from .database_utilities import initialize_database
 
 # Initialize the database (Create the file and tables if they don't exist).
 initialize_database()

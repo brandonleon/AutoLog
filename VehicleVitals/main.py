@@ -7,9 +7,9 @@ from typing import Annotated
 from enum import Enum
 
 import typer
-import display
-import add_record
-from database_utilities import initialize_database
+from . import display
+from . import add_record
+from .database_utilities import initialize_database
 
 # Initialize the database (Create the file and tables if they don't exist).
 initialize_database()
