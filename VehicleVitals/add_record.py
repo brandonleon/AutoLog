@@ -151,10 +151,10 @@ def vehicle(
     year: Annotated[int, typer.Option(help="Year of vehicle")],
     make: Annotated[str, typer.Option(help="Make of vehicle")],
     model: Annotated[str, typer.Option(help="Model of vehicle")],
+    color: Annotated[str, typer.Option(help="Color of vehicle")],
     milage: Annotated[float, typer.Option(help="Odometer reading")],
     trim: Annotated[str, typer.Option(help="Trim level vehicle")] = None,
     engine: Annotated[str, typer.Option(help="Engine of vehicle")] = None,
-    color: Annotated[str, typer.Option(help="Color of vehicle")] = None,
 ):
     """
     Inserts a new vehicle record into the database.
