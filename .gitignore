@@ -6,3 +6,7 @@
 **/__pycache__/
 **/*.py[cod]
 **/*$py.class
+
+# MacOS & Python dotenv
+.DS_Store
+.env
