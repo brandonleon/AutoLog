@@ -9,8 +9,8 @@ from uuid import uuid4
 
 import typer
 
-from .database_utilities import initialize_database
 from .database_utilities import get_db_location
+from .database_utilities import initialize_database
 
 # Initialize the database (Create the file and tables if they don't exist).
 initialize_database()
@@ -44,106 +44,26 @@ class ServiceTypes(str, Enum):
     car_detailing = "Car Detailing"
 
 
-def add_service(
-    vehicle_id: str,
-    odometer: float,
-    entry_date: str,
-    entry_time: str,
-    location: str,
-    service_type: ServiceTypes,
-    cost: float,
+@app.command()
+def fuel_up(
+    vehicle_id: Annotated[str, typer.Option(help="Vehicle ID")],
+    odometer: Annotated[float, typer.Option(help="Odometer reading")],
+    gallons: Annotated[float, typer.Option(help="Gallons filled")],
+    cost_per_gallon: Annotated[float, typer.Option(help="Cost per gallon")],
+    entry_date: Annotated[
+        str, typer.Option(help="Date of service")
+    ] = datetime.now().strftime("%m/%d/%Y"),
+    entry_time: Annotated[
+        str, typer.Option(help="Time of service")
+    ] = datetime.now().strftime("%I:%M %p"),
+    location: Annotated[str, typer.Option(help="Location of service")] = "Home",
 ):
     """
-    Adds a service log entry for a vehicle.
+    Add a fuel up entry to the database.
 
-    Args:
-        vehicle_id (str): The ID of the vehicle.
-        odometer (float): The odometer reading at the time of the service.
-        entry_date (str): The date of the service entry (default: today's date).
-        entry_time (str): The time of the service entry (default: current time).
-        location (str): The location of the service.
-        service_type (ServiceTypes): The type of service performed.
-        cost (float): The cost of the service.
-
-    Returns:
-        None
-
-    Examples:
-        add_service(
-            vehicle_id="ABC123",
-            odometer=10000.0,
-            entry_date="2022-01-01",
-            entry_time="09:00:00",
-            location="Home",
-            service_type=ServiceTypes.oil_change,
-            cost=50.0,
-        )
+    Example:
+        vv add fuel-up --vehicle-id 23b3db142984 --odometer 1000 --gallons 10.0 --cost-per-gallon 2.50
     """
-
-    with sqlite3.connect(get_db_location()) as conn:
-        cursor = conn.cursor()
-        query = """
-            INSERT INTO logs (
-                ID, VehicleID, EntryType, OdometerReading, 
-                EntryDate, EntryTime, Location, TotalCost, Services
-            ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """
-
-        cursor.execute(
-            query,
-            (
-                str(uuid4()),
-                vehicle_id,
-                "Service",
-                odometer,
-                entry_date,
-                entry_time,
-                location,
-                f"${cost:.2f}",
-                service_type.value
-            ),
-        ),
-        # conn.commit()
-        typer.echo(f"Added log entry for {vehicle_id}.")
-
-
-def add_fuel_up(
-    vehicle_id: str,
-    odometer: float,
-    entry_date: str,
-    entry_time: str,
-    location: str,
-    cost_per_gallon: float,
-    gallons: float,
-):
-    """
-    Adds a fuel-up log entry for a vehicle.
-
-    Args:
-        vehicle_id (str): The ID of the vehicle.
-        odometer (float): The odometer reading at the time of the fuel-up.
-        entry_date (str): The date of the fuel-up entry (default: today's date).
-        entry_time (str): The time of the fuel-up entry (default: current time).
-        location (str): The location of the fuel-up.
-        cost_per_gallon (float): The cost per gallon of fuel
-        gallons (float): The number of gallons filled.
-
-    Returns:
-        None
-
-    Examples:
-        add_fuel_up(
-            vehicle_id="ABC123",
-            odometer=10000.0,
-            entry_date="2022-01-01",
-            entry_time="09:00:00",
-            location="Shell",
-            cost_per_gallon=2.5,
-            gallons=10.0,
-        )
-    """
-
     with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
         query = """
@@ -175,34 +95,6 @@ def add_fuel_up(
 
 
 @app.command()
-def fuel_up(
-    vehicle_id: Annotated[str, typer.Option(help="Vehicle ID")],
-    odometer: Annotated[float, typer.Option(help="Odometer reading")],
-    gallons: Annotated[float, typer.Option(help="Gallons filled")],
-    cost_per_gallon: Annotated[float, typer.Option(help="Cost per gallon")],
-    entry_date: Annotated[
-        str, typer.Option(help="Date of service")
-    ] = datetime.now().strftime("%m/%d/%Y"),
-    entry_time: Annotated[
-        str, typer.Option(help="Time of service")
-    ] = datetime.now().strftime("%I:%M %p"),
-    location: Annotated[str, typer.Option(help="Location of service")] = "Home",
-):
-    """
-    Add a fuel up entry to the database.
-    """
-    add_fuel_up(
-        vehicle_id,
-        odometer,
-        entry_date,
-        entry_time,
-        location,
-        cost_per_gallon,
-        gallons,
-    )
-
-
-@app.command()
 def service(
     vehicle_id: Annotated[str, typer.Option(help="Vehicle ID")],
     odometer: Annotated[float, typer.Option(help="Odometer reading")],
@@ -218,16 +110,36 @@ def service(
 ):
     """
     Add a service entry to the database.
+
+    Example:
+        vv add service --vehicle-id 23b3db142984 --odometer 1000 --service-type "Oil Change" --cost 50.00
     """
-    add_service(
-        vehicle_id,
-        odometer,
-        entry_date,
-        entry_time,
-        location,
-        service_type,
-        cost,
-    )
+    with sqlite3.connect(get_db_location()) as conn:
+        cursor = conn.cursor()
+        query = """
+            INSERT INTO logs (
+                ID, VehicleID, EntryType, OdometerReading, 
+                EntryDate, EntryTime, Location, TotalCost, Services
+            ) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+
+        cursor.execute(
+            query,
+            (
+                str(uuid4()),
+                vehicle_id,
+                "Service",
+                odometer,
+                entry_date,
+                entry_time,
+                location,
+                f"${cost:.2f}",
+                service_type.value,
+            ),
+        ),
+        # conn.commit()
+        typer.echo(f"Added log entry for {vehicle_id}.")
 
 
 def add_vehicle(year, make, model, trim, engine, color):
@@ -245,8 +157,12 @@ def vehicle(
     color: Annotated[str, typer.Option(help="Color of vehicle")] = None,
 ):
     """
-    Add a vehicle to the database.
+    Inserts a new vehicle record into the database.
+
+    Example:
+        vv add vehicle --year 2021 --make Honda --model Civic --mileage 1000 --color Red
     """
+
     with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
         query = """
