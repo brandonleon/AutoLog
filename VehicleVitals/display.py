@@ -30,7 +30,10 @@ def logs(
     View logs with optional filtering and pagination.
 
     Examples:
+
         vv display logs
+
+
         vv display logs --vehicle-id 6a9ab94e-0cea-481d-a9d4-23b3db142984
     """
     with sqlite3.connect(get_db_location()) as conn:
@@ -88,7 +91,10 @@ def vehicles(
     View vehicles with optional filtering and pagination.
 
     Examples:
+
         vv display vehicles
+
+
         vv display vehicles --vehicle-id 6a9ab94e-0cea-481d-a9d4-23b3db142984
     """
     with sqlite3.connect(get_db_location()) as conn:
