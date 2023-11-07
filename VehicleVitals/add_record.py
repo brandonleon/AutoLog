@@ -66,13 +66,29 @@ def fuel_up(
     """
     with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
+        # Fetch the last fuel up entry for the vehicle to determine the MPG
+        last_fuel_up_query = """
+            SELECT OdometerReading, GallonsFilled
+            FROM logs
+            WHERE VehicleID = ? and EntryType = 'Gas'
+            ORDER BY EntryDate DESC, EntryTime DESC
+            LIMIT 1
+            """
+        cursor.execute(last_fuel_up_query, (vehicle_id,))
+        if last_fuel_up := cursor.fetchone():
+            last_odometer, last_gallons = last_fuel_up
+            mpg = (odometer - last_odometer) / last_gallons if last_gallons > 0 else None
+        else:
+            mpg = None
+
+        # Insert the fuel up entry
         query = """
             INSERT INTO logs (
-                ID, VehicleID, EntryType, OdometerReading, 
+                ID, VehicleID, EntryType, MPG, OdometerReading, 
                 EntryDate, EntryTime, Location, CostPerGallon, 
                 GallonsFilled, TotalCost
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
         cursor.execute(
@@ -81,6 +97,7 @@ def fuel_up(
                 str(uuid4()),
                 vehicle_id,
                 "Gas",
+                mpg,
                 odometer,
                 entry_date,
                 entry_time,
@@ -105,7 +122,7 @@ def service(
     cost: Annotated[float, typer.Option(help="Cost of service ($0.00)")],
     entry_date: Annotated[
         str, typer.Option(help="Date of service")
-    ] = datetime.now().strftime("%m/%d/%Y"),
+    ] = datetime.now().strftime("%Y-%m-%d"),
     entry_time: Annotated[
         str, typer.Option(help="Time of service")
     ] = datetime.now().strftime("%I:%M %p"),
@@ -141,7 +158,9 @@ def service(
                 service_type.value,
             ),
         ),
-        # conn.commit()
+        query = "UPDATE vehicles SET mileage = ? WHERE id = ?"
+        cursor.execute(query, (odometer, vehicle_id))
+        conn.commit()
         typer.echo(f"Added log entry for {vehicle_id}.")
 
 
