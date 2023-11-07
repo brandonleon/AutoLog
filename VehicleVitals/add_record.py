@@ -9,7 +9,6 @@ from uuid import uuid4
 
 import typer
 
-from .constants import DB_FILE
 from .database_utilities import initialize_database
 
 # Initialize the database (Create the file and tables if they don't exist).

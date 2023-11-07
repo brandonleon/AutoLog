@@ -2,9 +2,12 @@
 This is the main entry point for the application. It creates the Typer app and
 defines the commands that can be run from the command line.
 """
-from datetime import datetime
-from typing import Annotated
-from enum import Enum
+import os
+import sys
+
+# Add the project's root directory to the sys.path
+project_root = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, project_root)
 
 import typer
 from . import display

@@ -8,8 +8,9 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from .constants import DB_FILE
+from .database_utilities import get_db_location
 from .database_utilities import initialize_database
+
 
 # Initialize the database (Create the file and tables if they don't exist).
 initialize_database()
@@ -25,7 +26,7 @@ def query_logs(page: int = 1, page_size: int = 10, vehicle_id: str = None):
     page_size: The number of records to display per page.
     vehicle_id: The vehicle ID to filter on.
     """
-    with sqlite3.connect(DB_FILE) as conn:
+    with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
 
         # Calculate the OFFSET based on the page number and page size
@@ -76,7 +77,7 @@ def query_vehicles(page: int = 1, page_size: int = 10, vehicle_id: str = None):
     page_size: The number of records to display per page.
     vehicle_id: The vehicle ID to filter on.
     """
-    with sqlite3.connect(DB_FILE) as conn:
+    with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
 
         # Calculate the OFFSET based on the page number and page size
