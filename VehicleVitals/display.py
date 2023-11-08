@@ -102,7 +102,7 @@ def vehicles(
         cursor = conn.cursor()
 
         # Calculate the OFFSET based on the page number and page size
-        query = "SELECT id, Year, Make, Model, Year, mileage FROM vehicles"
+        query = "SELECT id, Year, Make, Model, trim, mileage FROM vehicles"
         params = ()
         if vehicle_id:
             query += " WHERE id = ?"
