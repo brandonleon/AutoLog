@@ -2,16 +2,10 @@
 This is the main entry point for the application. It creates the Typer app and
 defines the commands that can be run from the command line.
 """
-import os
-import sys
-
-# Add the project's root directory to the sys.path
-project_root = os.path.dirname(os.path.realpath(__file__))
-sys.path.insert(0, project_root)
-
 import typer
-from . import display
+
 from . import add_record
+from . import display
 from .database_utilities import initialize_database
 
 # Initialize the database (Create the file and tables if they don't exist).
