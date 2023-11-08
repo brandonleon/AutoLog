@@ -11,9 +11,24 @@ VehicleVitals is a Python-based tool designed for monitoring the health and fuel
 - **Multi-Vehicle Support:** View historical data for multiple vehicles.
 
 # Getting Started
-- Create a database to store your vehicle and fuel consumption data. By default, VehicleVitals uses SQLite.
-- Utilize the provided commands to add and manage your vehicle and fuel consumption entries.
-- Generate reports and gain insights into your vehicle's performance and expenses.
+
+Before you start using VehicleVitals, there are a few important things to keep in mind:
+
+- **Database Schema Changes:** This project is currently under development and may undergo occasional database schema changes until version 1.0 is released. These changes could potentially affect the application's functionality and data integrity. As such, it is advisable to back up your data regularly, especially if you are using VehicleVitals in a production environment.
+
+Please be cautious when updating the application or the database structure, and stay tuned for updates as we work towards a stable 1.0 release.
+
+# Installation
+- Clone the repository to your local machine.
+- Use Poetry to build the project and install the dependencies.
+
+```
+poetry install # Install dependencies
+poetry build # Build the project
+pipx install dist/vehiclevitals-0.1.0-py3-none-any.whl # Install the application
+```
+
+- Run the ```vv``` command to start the application.
 
 # Usage
 ## Command Line Interface

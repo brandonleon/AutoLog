@@ -70,8 +70,8 @@ def logs(
                     f"{log[0]} {log[1]} {log[2]} {log[3]}",
                     log[4],
                     log[5],
-                    f"{float(str(log[6]).replace(',', '')):,.1f}" if log[7] is not None else "N/A",
-                    f"{float(str(log[7]).replace(',', '')):,.1f}" if log[7] is not None else "N/A",
+                    f"{float(log[6]):,.1f}" if log[6] is not None else "N/A",
+                    f"{float(log[7]):,.1f}" if log[7] is not None else "N/A",
                     log[8],
                     log[9],
                 )
