@@ -108,7 +108,7 @@ def vehicles(
             query += " WHERE id = ?"
             params = (vehicle_id,)
 
-        query += " ORDER BY id LIMIT ? OFFSET ?"
+        query += " ORDER BY Year DESC, Make, Model LIMIT ? OFFSET ?"
         params += (page_size, (page - 1) * page_size)
 
         cursor.execute(query, params)
