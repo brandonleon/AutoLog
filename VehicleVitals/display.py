@@ -86,8 +86,8 @@ def logs(
 def vehicles(
     page: Annotated[int, typer.Option(help="Page number to retrieve.")] = 1,
     page_size: Annotated[int, typer.Option(help="Number of records per page.")] = 10,
-    vehicle_id: Annotated[
-        str, typer.Option(help="Filter by Vehicle ID (All if blank).")
+    vehicle: Annotated[
+        str, typer.Option(help="Filter by Vehicle ID or Name (All if blank).")
     ] = "",
 ):
     """
@@ -97,36 +97,35 @@ def vehicles(
 
         vv display vehicles
 
+        vv display vehicles --vehicle 6a9ab94e-0cea-481d-a9d4-23b3db142984
 
-        vv display vehicles --vehicle-id 6a9ab94e-0cea-481d-a9d4-23b3db142984
+        vv display vehicles --vehicle "My Vehicle"
     """
     with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
 
         # Calculate the OFFSET based on the page number and page size
-        query = "SELECT id, Year, Make, Model, trim, mileage FROM vehicles"
+        query = "SELECT id, name, Year, Make, Model, trim, mileage FROM vehicles"
         params = ()
-        if vehicle_id:
-            query += " WHERE id = ?"
-            params = (vehicle_id,)
+        if vehicle:
+            query += " WHERE name = ? or id = ?"
+            params = (vehicle, vehicle)
 
         query += " ORDER BY Year DESC, Make, Model LIMIT ? OFFSET ?"
         params += (page_size, (page - 1) * page_size)
 
         cursor.execute(query, params)
         if vehicle_entries := cursor.fetchall():
-            print(f"Page {page}:")
+            typer.echo(f"Page {page} of {len(vehicle_entries) // page_size + 1}:")
             console = Console()
-            table = Table("id", "year", "make", "Model", "trim", "mileage")
+            table = Table("ID", "Name", "Vehicle Description", "Mileage")
             for vehicle in vehicle_entries:
                 v = [str(x) for x in vehicle]
                 table.add_row(
                     v[0],
-                    v[1],
-                    v[2],
-                    v[3],
-                    v[4],
-                    f"{float(str(v[5]).replace(',', '')):,.1f}",
+                    v[1] if v[1] != "None" else "",
+                    f"{v[2]} {v[3]} {v[4]} {v[5]}",
+                    f"{float(str(v[6]).replace(',', '')):,.1f}",
                 )
 
             console.print(table)

@@ -60,13 +60,14 @@ CREATE TABLE IF NOT EXISTS "logs"
     create_vehicles_table_sql = """
 CREATE TABLE IF NOT EXISTS "vehicles" (
     "id"        TEXT NOT NULL,
+    "name"      TEXT,
     "Year"      INTEGER NOT NULL,
     "Make"      TEXT NOT NULL,
     "Model"     TEXT NOT NULL,
-    "trim"      text,
+    "trim"      TEXT,
     "Engine"    TEXT,
     "Color"     TEXT NOT NULL,
-    "mileage"   real NOT NULL DEFAULT 0,
+    "mileage"   REAL NOT NULL DEFAULT 0,
     PRIMARY KEY("id")
 )
 """

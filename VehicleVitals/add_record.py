@@ -174,6 +174,7 @@ def vehicle(
     model: Annotated[str, typer.Option(help="Model of vehicle")],
     color: Annotated[str, typer.Option(help="Color of vehicle")],
     milage: Annotated[float, typer.Option(help="Odometer reading")],
+    name: Annotated[str, typer.Option(help="Short name of vehicle")] = None,
     trim: Annotated[str, typer.Option(help="Trim level vehicle")] = None,
     engine: Annotated[str, typer.Option(help="Engine of vehicle")] = None,
 ):
@@ -188,15 +189,16 @@ def vehicle(
         cursor = conn.cursor()
         query = """
             INSERT INTO vehicles (
-                id, Year, Make, Model, mileage, trim, Engine, Color
+                id, name, Year, Make, Model, mileage, trim, Engine, Color
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
         cursor.execute(
             query,
             (
                 str(uuid4()),
+                name,
                 year,
                 make,
                 model,
