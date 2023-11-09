@@ -10,10 +10,7 @@ from uuid import uuid4
 import typer
 
 from .database_utilities import get_db_location
-from .database_utilities import initialize_database
 
-# Initialize the database (Create the file and tables if they don't exist).
-initialize_database()
 # Create the Typer app
 app = typer.Typer()
 
@@ -77,7 +74,9 @@ def fuel_up(
         cursor.execute(last_fuel_up_query, (vehicle_id,))
         if last_fuel_up := cursor.fetchone():
             last_odometer, last_gallons = last_fuel_up
-            mpg = (odometer - last_odometer) / last_gallons if last_gallons > 0 else None
+            mpg = (
+                (odometer - last_odometer) / last_gallons if last_gallons > 0 else None
+            )
         else:
             mpg = None
 

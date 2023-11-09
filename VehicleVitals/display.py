@@ -9,11 +9,7 @@ from rich.console import Console
 from rich.table import Table
 
 from .database_utilities import get_db_location
-from .database_utilities import initialize_database
 
-
-# Initialize the database (Create the file and tables if they don't exist).
-initialize_database()
 # Create the Typer app
 app = typer.Typer()
 
@@ -63,7 +59,13 @@ def logs(
             print(f"Page {page}:")
             console = Console()
             table = Table(
-                "Vehicle", "EntryDate", "EntryTime", "Odometer", "MPG", "EntryType", "Services"
+                "Vehicle",
+                "EntryDate",
+                "EntryTime",
+                "Odometer",
+                "MPG",
+                "EntryType",
+                "Services",
             )
             for log in log_entries:
                 table.add_row(
