@@ -83,6 +83,23 @@ def fuel_up(
     Example:
         vv add fuel-up --vehicle-id 23b3db142984 --odometer 1000 --gallons 10.0 --cost-per-gallon 2.50
     """
+
+    # convert Fuel type to the format used in the database:
+    # "Regular" -> "Regular [Octane: 87]"
+    # "Diesel" -> "Diesel [Centane: 40]"
+
+    match fuel_type:
+        case FuelTypes.regular:
+            fuel_type = f"{fuel_type.value} [Octane: 87]"
+        case FuelTypes.mid_grade:
+            fuel_type = f"{fuel_type.value} [Octane: 89]"
+        case FuelTypes.premium:
+            fuel_type = f"{fuel_type.value} [Octane: 91]"
+        case FuelTypes.diesel:
+            fuel_type = f"{fuel_type.value} [Centane: 40]"
+        case _:
+            raise ValueError(f"Invalid fuel type: {fuel_type}")
+
     with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
         # Fetch the last fuel up entry for the vehicle to determine the MPG
@@ -126,7 +143,7 @@ def fuel_up(
                 f"${cost_per_gallon:.3f}",
                 gallons,
                 f"${cost_per_gallon * gallons:.2f}",
-                fuel_type.value,
+                fuel_type,
             ),
         ),
 
