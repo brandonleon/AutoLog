@@ -44,10 +44,10 @@ class ServiceTypes(str, Enum):
 class FuelTypes(str, Enum):
     """
     Enum class representing different types of fuel.
-    
+
     Explanation:
     This enum class defines various types of fuel that can be used in a vehicle.
-    
+
     Attributes:
     - regular: Represents regular gasoline.
     - mid_grade: Represents mid-grade gasoline.
@@ -68,7 +68,9 @@ def fuel_up(
     gallons: Annotated[float, typer.Option(help="Gallons filled")],
     cost_per_gallon: Annotated[float, typer.Option(help="Cost per gallon")],
     # Todo: Make default fuel type user configurable.
-    fuel_type: Annotated[FuelTypes, typer.Option(help="Type of fuel")] = FuelTypes.premium.value,
+    fuel_type: Annotated[
+        FuelTypes, typer.Option(help="Type of fuel")
+    ] = FuelTypes.premium.value,
     entry_date: Annotated[
         str, typer.Option(help="Date of service")
     ] = datetime.now().strftime("%Y-%m-%d"),
