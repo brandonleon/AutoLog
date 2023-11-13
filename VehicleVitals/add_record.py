@@ -41,12 +41,34 @@ class ServiceTypes(str, Enum):
     car_detailing = "Car Detailing"
 
 
+class FuelTypes(str, Enum):
+    """
+    Enum class representing different types of fuel.
+    
+    Explanation:
+    This enum class defines various types of fuel that can be used in a vehicle.
+    
+    Attributes:
+    - regular: Represents regular gasoline.
+    - mid_grade: Represents mid-grade gasoline.
+    - premium: Represents premium gasoline.
+    - diesel: Represents diesel fuel.
+    """
+
+    regular = "Regular"
+    mid_grade = "Mid-Grade"
+    premium = "Premium"
+    diesel = "Diesel"
+
+
 @app.command()
 def fuel_up(
     vehicle_id: Annotated[str, typer.Option(help="Vehicle ID")],
     odometer: Annotated[float, typer.Option(help="Odometer reading")],
     gallons: Annotated[float, typer.Option(help="Gallons filled")],
     cost_per_gallon: Annotated[float, typer.Option(help="Cost per gallon")],
+    # Todo: Make default fuel type user configurable.
+    fuel_type: Annotated[FuelTypes, typer.Option(help="Type of fuel")] = FuelTypes.premium.value,
     entry_date: Annotated[
         str, typer.Option(help="Date of service")
     ] = datetime.now().strftime("%Y-%m-%d"),
@@ -85,9 +107,9 @@ def fuel_up(
             INSERT INTO logs (
                 ID, VehicleID, EntryType, MPG, OdometerReading, 
                 EntryDate, EntryTime, Location, CostPerGallon, 
-                GallonsFilled, TotalCost
+                GallonsFilled, TotalCost, OctaneRating
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
         cursor.execute(
@@ -104,6 +126,7 @@ def fuel_up(
                 f"${cost_per_gallon:.3f}",
                 gallons,
                 f"${cost_per_gallon * gallons:.2f}",
+                fuel_type.value,
             ),
         ),
 
@@ -161,10 +184,6 @@ def service(
         cursor.execute(query, (odometer, vehicle_id))
         conn.commit()
         typer.echo(f"Added log entry for {vehicle_id}.")
-
-
-def add_vehicle(year, make, model, trim, engine, color):
-    pass
 
 
 @app.command()
