@@ -28,16 +28,6 @@ def vehicle(
     """
     Edit a vehicle record in the database, based on the vehicle ID or name.
     Only values that are passed in will be updated.
-    Args:
-        vehicle: ID or Name of the vehicle
-        year:
-        make:
-        model:
-        color:
-        mileage:
-        name:
-        trim:
-        engine:
     """
     with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
