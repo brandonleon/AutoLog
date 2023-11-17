@@ -6,7 +6,6 @@ import sqlite3
 from typing import Annotated
 
 import typer
-from icecream import ic
 
 from .database_utilities import get_db_location
 
@@ -80,7 +79,7 @@ def vehicle(
 
         params += [vehicle, vehicle]
 
-        cursor.execute(ic(query), params)
+        cursor.execute(query, params)
         conn.commit()
         typer.echo(f"Updated vehicle {vehicle}.")
 
