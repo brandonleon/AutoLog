@@ -23,6 +23,7 @@ def vehicle(
     name: Annotated[str, typer.Option(help="Short name of vehicle")] = None,
     trim: Annotated[str, typer.Option(help="Trim level vehicle")] = None,
     engine: Annotated[str, typer.Option(help="Engine of vehicle")] = None,
+    confirm: Annotated[bool, typer.Option(help="Confirm the update")] = True,
 ):
     """
     Edit a vehicle record in the database, based on the vehicle ID or name.
@@ -78,9 +79,11 @@ def vehicle(
 
         params += [vehicle, vehicle]
 
+        if confirm:
+            typer.confirm(f"Update vehicle {vehicle}?", abort=True)
+
         cursor.execute(query, params)
         conn.commit()
-        typer.echo(f"Updated vehicle {vehicle}.")
 
 
 if __name__ == "__main__":
