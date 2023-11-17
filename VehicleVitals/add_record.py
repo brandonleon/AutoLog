@@ -115,9 +115,7 @@ def fuel_up(
         cursor.execute(last_fuel_up_query, (vehicle_id,))
         if last_fuel_up := cursor.fetchone():
             last_odometer, last_gallons = last_fuel_up
-            mpg = (
-                (odometer - last_odometer) /  gallons if last_gallons > 0 else None
-            )
+            mpg = (odometer - last_odometer) / gallons if last_gallons > 0 else None
         else:
             mpg = None
 

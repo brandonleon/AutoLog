@@ -1,7 +1,6 @@
 """
 This module contains the functions to edit entries in the database.
 """
-
 import sqlite3
 from typing import Annotated
 
