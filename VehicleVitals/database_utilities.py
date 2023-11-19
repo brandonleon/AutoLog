@@ -32,6 +32,12 @@ def get_db_location() -> Path:
 
 
 def initialize_database():
+    """
+    Load the SQL statements from the init_database.sql file and execute them.
+    If database or tables do not exist, they will be created.
+    Returns:
+        None
+    """
     sql_statements = Path(
         Path(__file__).parent.parent / "sql" / "init_database.sql"
     ).read_text()
