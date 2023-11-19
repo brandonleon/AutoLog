@@ -10,23 +10,24 @@ from dotenv import load_dotenv
 
 def get_db_location() -> Path:
     """
-    Check for the database configuration in the order of
-    - .env file
-    - Environment variable
-    - Default value
+    Check for the database configuration in the order of:
+    1. Look for a .env file in the current directory and load its content.
+    2. Check for the environment variable VEHICLE_VITALS_DATABASE_LOCATION.
+    3. Use the default value if neither .env nor environment variable exists.
+
+    Returns:
+        Path: Path object representing the location of the database.
     """
-    # Check for .env file in the current directory
+    # 1. Check for .env file in the current directory
     env_file = Path(".") / ".env"
     if env_file.is_file():
         load_dotenv(dotenv_path=env_file)
 
-        if database_url := os.getenv("VEHICLE_VITALS_DATABASE_LOCATION"):
-            return Path.cwd() / database_url
-
+    # 2. Check for environment variable
     if database_url := os.getenv("VEHICLE_VITALS_DATABASE_LOCATION"):
         return Path(database_url)
 
-    # If neither .env nor environment variable exists, use the default value as a Path object
+    # 3. Use the default value
     return Path.home() / ".config" / "VehicleVitals.db"
 
 
