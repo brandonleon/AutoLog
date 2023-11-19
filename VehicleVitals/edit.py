@@ -15,6 +15,7 @@ app = typer.Typer()
 @app.command()
 def vehicle(
     vehicle: Annotated[str, typer.Option(help="ID or Name of the vehicle")] = None,
+    confirm: Annotated[bool, typer.Option(help="Confirm the update")] = True,
     year: Annotated[int, typer.Option(help="Year of vehicle")] = None,
     make: Annotated[str, typer.Option(help="Make of vehicle")] = None,
     model: Annotated[str, typer.Option(help="Model of vehicle")] = None,
@@ -23,7 +24,6 @@ def vehicle(
     name: Annotated[str, typer.Option(help="Short name of vehicle")] = None,
     trim: Annotated[str, typer.Option(help="Trim level vehicle")] = None,
     engine: Annotated[str, typer.Option(help="Engine of vehicle")] = None,
-    confirm: Annotated[bool, typer.Option(help="Confirm the update")] = True,
 ):
     """
     Edit a vehicle record in the database, based on the vehicle ID or name.

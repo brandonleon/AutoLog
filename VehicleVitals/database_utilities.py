@@ -31,49 +31,17 @@ def get_db_location() -> Path:
 
 
 def initialize_database():
-    create_logs_table_sql = """
-CREATE TABLE IF NOT EXISTS "logs"
-(
-    ID              TEXT,
-    VehicleID       TEXT
-        constraint logs_vehicles_id_fk
-            references vehicles,
-    EntryType       TEXT,
-    MPG             REAL,
-    EntryDate       TEXT,
-    EntryTime       TEXT,
-    OdometerReading REAL,
-    IsFillUp        TEXT,
-    CostPerGallon   REAL,
-    GallonsFilled   REAL,
-    TotalCost       REAL,
-    OctaneRating    INT,
-    GasBrand        TEXT,
-    Location        TEXT,
-    EntryTags       TEXT,
-    PaymentType     TEXT,
-    TirePressure    TEXT,
-    Notes           TEXT,
-    Services        TEXT
-)
-"""
-    create_vehicles_table_sql = """
-CREATE TABLE IF NOT EXISTS "vehicles" (
-    "id"        TEXT NOT NULL,
-    "name"      TEXT,
-    "Year"      INTEGER NOT NULL,
-    "Make"      TEXT NOT NULL,
-    "Model"     TEXT NOT NULL,
-    "trim"      TEXT,
-    "Engine"    TEXT,
-    "Color"     TEXT NOT NULL,
-    "mileage"   REAL NOT NULL DEFAULT 0,
-    PRIMARY KEY("id")
-)
-"""
+    sql_statements = Path(
+        Path(__file__).parent.parent / "sql" / "init_database.sql"
+    ).read_text()
+
     with sqlite3.connect(get_db_location()) as conn:
         cursor = conn.cursor()
 
         # Execute the SQL statements to create the tables
-        cursor.execute(create_logs_table_sql)
-        cursor.execute(create_vehicles_table_sql)
+        cursor.executescript(sql_statements)
+        conn.commit()
+
+
+if __name__ == "__main__":
+    initialize_database()
