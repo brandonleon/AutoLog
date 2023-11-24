@@ -67,6 +67,8 @@ def fuel_up(
     odometer: Annotated[float, typer.Option(help="Odometer reading")],
     gallons: Annotated[float, typer.Option(help="Gallons filled")],
     cost_per_gallon: Annotated[float, typer.Option(help="Cost per gallon")],
+    filled_up: Annotated[bool, typer.Option(help="Filled up the tank")] = True,
+    missed_last_fill_up: Annotated[bool, typer.Option(help="Missed fill up")] = False,
     # Todo: Make default fuel type user configurable.
     fuel_type: Annotated[
         FuelTypes, typer.Option(help="Type of fuel")
@@ -89,6 +91,16 @@ def fuel_up(
     # convert Fuel type to the format used in the database:
     # "Regular" -> "Regular [Octane: 87]"
     # "Diesel" -> "Diesel [Centane: 40]"
+    is_fill_up = "Unknown"  # Set a default value
+    match (filled_up, missed_last_fill_up):
+        case (True, False):
+            is_fill_up = "Full"
+        case (False, True):
+            is_fill_up = "Reset"
+        case (True, True):
+            is_fill_up = "Reset"
+        case (False, False):
+            is_fill_up = "Partial"
 
     match fuel_type:
         case FuelTypes.regular:
@@ -103,30 +115,31 @@ def fuel_up(
             raise ValueError(f"Invalid fuel type: {fuel_type}")
 
     with sqlite3.connect(get_db_location()) as conn:
-        cursor = conn.cursor()
-        # Fetch the last fuel up entry for the vehicle to determine the MPG
-        last_fuel_up_query = """
-            SELECT OdometerReading, GallonsFilled
-            FROM logs
-            WHERE VehicleID = ? and EntryType = 'Gas'
-            ORDER BY EntryDate DESC, EntryTime DESC
-            LIMIT 1
-            """
-        cursor.execute(last_fuel_up_query, (vehicle_id,))
-        if last_fuel_up := cursor.fetchone():
-            last_odometer, last_gallons = last_fuel_up
-            mpg = (odometer - last_odometer) / gallons if last_gallons > 0 else None
-        else:
-            mpg = None
+        if is_fill_up == "Full":
+            cursor = conn.cursor()
+            # Fetch the last fuel up entry for the vehicle to determine the MPG
+            last_fuel_up_query = """
+                        SELECT OdometerReading, GallonsFilled
+                        FROM logs
+                        WHERE VehicleID = ? and EntryType = 'Gas'
+                        ORDER BY EntryDate DESC, EntryTime DESC
+                        LIMIT 1
+                        """
+            cursor.execute(last_fuel_up_query, (vehicle_id,))
+            if last_fuel_up := cursor.fetchone():
+                last_odometer, last_gallons = last_fuel_up
+                mpg = (odometer - last_odometer) / gallons if last_gallons > 0 else None
+            else:
+                mpg = None
 
         # Insert the fuel up entry
         query = """
             INSERT INTO logs (
-                ID, VehicleID, EntryType, MPG, OdometerReading, 
+                ID, VehicleID, EntryType, MPG, OdometerReading, IsFillUp,
                 EntryDate, EntryTime, Location, CostPerGallon, 
                 GallonsFilled, TotalCost, OctaneRating
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
         cursor.execute(
@@ -137,6 +150,7 @@ def fuel_up(
                 "Gas",
                 mpg,
                 odometer,
+                is_fill_up,
                 entry_date,
                 entry_time,
                 location,
