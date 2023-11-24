@@ -39,7 +39,7 @@ def initialize_database():
         None
     """
     sql_statements = Path(
-        Path(__file__).parent.parent / "sql" / "init_database.sql"
+        Path(__file__).parent / "sql" / "init_database.sql"
     ).read_text()
 
     with sqlite3.connect(get_db_location()) as conn:
