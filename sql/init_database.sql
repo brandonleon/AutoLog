@@ -52,7 +52,15 @@ CREATE TABLE IF NOT EXISTS "service_types" (
     "description"   TEXT,
     "interval_days" INTEGER,
     "interval_miles" INTEGER,
-    "part_id"       TEXT,
-    PRIMARY KEY("id"),
+    PRIMARY KEY("id")
+);
+
+-- service_type_parts table (junction table)
+CREATE TABLE IF NOT EXISTS "service_type_parts" (
+    "service_type_id" TEXT NOT NULL,
+    "part_id"         TEXT NOT NULL,
+    PRIMARY KEY("service_type_id", "part_id"),
+    FOREIGN KEY ("service_type_id") REFERENCES "service_types" ("id"),
     FOREIGN KEY ("part_id") REFERENCES "parts" ("id")
 );
+
