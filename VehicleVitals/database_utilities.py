@@ -5,6 +5,7 @@ This module contains function to initialize the database and create the tables.
 import os
 import sqlite3
 from pathlib import Path
+import platform
 
 from dotenv import load_dotenv
 
@@ -96,8 +97,14 @@ def get_db_location() -> Path:
     if database_url := os.getenv("VEHICLE_VITALS_DATABASE_LOCATION"):
         return Path(database_url)
 
-    # 3. Use the default value
-    return Path.home() / ".config" / "VehicleVitals.db"
+    if platform.system() == "Windows":
+        path = Path.home() / "AppData" / "Local"
+        path.mkdir(exist_ok=True)
+        return path / "VehicleVitals.db"
+
+    path = Path.home() / ".config"
+    path.mkdir(exist_ok=True)
+    return path / "VehicleVitals.db"
 
 
 def initialize_database():
