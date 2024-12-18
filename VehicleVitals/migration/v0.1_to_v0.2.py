@@ -1,4 +1,4 @@
--- parts table
+sql = """-- parts table
 CREATE TABLE IF NOT EXISTS "parts" (
     "id"            TEXT NOT NULL,
     "name"          TEXT,
@@ -46,3 +46,4 @@ SET service_type_id = (
     FROM service_types
     WHERE name = logs.services
 );
+"""
