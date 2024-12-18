@@ -98,7 +98,9 @@ def get_db_location() -> Path:
         return Path(database_url)
 
     if platform.system() == "Windows":
-        return Path.home() / "AppData" / "Local" / "VehicleVitals.db"
+        path = Path.home() / "AppData" / "Local"
+        path.mkdir(exist_ok=True)
+        return path / "VehicleVitals.db"
 
     path = Path.home() / ".config"
     path.mkdir(exist_ok=True)
