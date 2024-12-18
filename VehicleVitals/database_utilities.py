@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 INIT_DATABASE_SQL = """
 -- logs table
 CREATE TABLE IF NOT EXISTS "logs" (
-    ID              TEXT,
+    ID              TEXT NOT NULL UNIQUE PRIMARY KEY,
     VehicleID       TEXT
         CONSTRAINT logs_vehicles_id_fk REFERENCES vehicles,
     EntryType       TEXT,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS "logs" (
 
 -- vehicles table
 CREATE TABLE IF NOT EXISTS "vehicles" (
-    "id"        TEXT NOT NULL,
+    "id"        TEXT NOT NULL UNIQUE PRIMARY KEY,
     "name"      TEXT,
     "Year"      INTEGER NOT NULL,
     "Make"      TEXT NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS "vehicles" (
 
 -- parts table
 CREATE TABLE IF NOT EXISTS "parts" (
-    "id"            TEXT NOT NULL,
+    "id"            TEXT NOT NULL UNIQUE PRIMARY KEY,
     "name"          TEXT,
     "description"   TEXT,
     "cost"          REAL,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS "parts" (
 
 -- service_types table
 CREATE TABLE IF NOT EXISTS "service_types" (
-    "id"            TEXT NOT NULL,
+    "id"            TEXT NOT NULL UNIQUE PRIMARY KEY,
     "name"          TEXT,
     "description"   TEXT,
     "interval_days" INTEGER,
