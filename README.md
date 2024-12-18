@@ -19,19 +19,22 @@ Before you start using VehicleVitals, there are a few important things to keep i
 Please be cautious when updating the application or the database structure, and stay tuned for updates as we work towards a stable 1.0 release.
 
 # Installation
-Recomended method is utilizing pipx or uv to install the package.
+The recommended method is to use pipx or uv to install the package. If you do not have Python set up on your system, uv will likely be easier, as it manages the creation of virtual environments and installs Python for you. On the other hand, pipx requires Python to be installed on your system beforehand.
 
-## Using pipx
-```
-pipx install https://github.com/brandonleon/VehicleVitals.git
-```
+1. Install the package using pipx or uv.
+## Install using uv
+Visit the [uv](https://docs.astral.sh/uv/getting-started/installation/) documentation for installation instructions.
 
-## Using uv
 ```
 uv tool install https://github.com/brandonleon/VehicleVitals.git
 ```
 
-- Run the ```vv --help``` or ```vv --version``` command to verify the installation.
+## Install using pipx
+Visit the [pipx](https://pipx.pypa.io/stable/installation/) documentation for installation instructions.
+```
+pipx install https://github.com/brandonleon/VehicleVitals.git
+```
+2. Run the ```vv --help``` or ```vv --version``` command to verify the installation.
 
 # Usage
 ## Command Line Interface
