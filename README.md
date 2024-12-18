@@ -19,16 +19,19 @@ Before you start using VehicleVitals, there are a few important things to keep i
 Please be cautious when updating the application or the database structure, and stay tuned for updates as we work towards a stable 1.0 release.
 
 # Installation
-- Clone the repository to your local machine.
-- Use Poetry to build the project and install the dependencies.
+Recomended method is utilizing pipx or uv to install the package.
 
+## Using pipx
 ```
-poetry install # Install dependencies
-poetry build # Build the project
-pipx install dist/vehiclevitals-0.1.0-py3-none-any.whl # Install the application
+pipx install https://github.com/brandonleon/VehicleVitals.git
 ```
 
-- Run the ```vv``` command to start the application.
+## Using uv
+```
+uv tool install https://github.com/brandonleon/VehicleVitals.git
+```
+
+- Run the ```vv --help``` or ```vv --version``` command to verify the installation.
 
 # Usage
 ## Command Line Interface
